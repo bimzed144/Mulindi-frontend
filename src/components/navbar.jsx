@@ -3,13 +3,14 @@ import { ImUser } from "react-icons/im";
 import { IoMdSettings } from "react-icons/io";
 import { IoMdNotifications } from "react-icons/io";
 import { ImSearch } from "react-icons/im";
+
 function Navbar(){
     return(
-        <div className="flex justify-between p-2 items-center border-b-1 border-black/30">
-        <h1 className="text-xl"> LOGO</h1>
+        <div className="flex justify-between p-2 items-center  h-20 w-full border-b-1 border-black/30">
+      
 
-           <div className="flex items-center gap-4 border h-10 rounded-[5px] justify-between px-2 w-100">
-            <input type="search" name="" id="" className="w-80 outline-none" />
+           <div className="flex items-center gap-4 border h-12 rounded-[5px] justify-between px-2 w-140">
+            <input type="search" name="" id="" className="w-120 text-xl outline-none" placeholder="Search...." />
             <div><ImSearch className="text-xl"/></div>
             </div>
            <div className="flex gap-7 mt-2">

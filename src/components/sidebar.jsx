@@ -1,29 +1,32 @@
-import { ImBell } from "react-icons/im";
-import { ImCompass2 } from "react-icons/im";
-import { Compass, Users, School,UserCheck, Calendar ,BookOpen } from "lucide-react";
-import Navitem from "./nav-item";
+import { NavLink } from "react-router-dom"
 
-function Sidebar(){
+function Sidebar({links}){
     return(
-        <div className="w-full  flex-col justify-between flex p-5 h-200 bg-white border-r-1"> 
-            <div>
-                <h1 className="text-3xl text-blue-500 log">Mulindi SCAS</h1>
+        <div className ="h-[100vh]  fixed w-50 p-4 border-l-2 border border-black/30 flex flex-col  justify-between">
+<h1 className = "text-blue-00 text-lg text-blue-500 font-bold bold">MULINDI SCS</h1>
 
-            </div>
-            <div className="">
-                <div className="-mt-20  gap-10 flex flex-col">
-                      <Navitem name="Dashboard" icon ={Compass}/>
-                      <Navitem name="Students" icon ={UserCheck}/>
-                    <Navitem name="Classes" icon ={BookOpen}/>
-                   <Navitem name="Users" icon ={Users}/>
-                     <Navitem name="Academic year"  icon ={Calendar}/>
-                     
-                </div>
-            </div>
-            <div className="w-full ">
-              <h1 className="text-xl">Term 3</h1>
-              <p className="text-xl">2025-2024</p>
-            </div>
+<div className="flex flex-col gap-3 ">
+    {links.map((link,index)=>(
+   <NavLink 
+            key={index}
+            to={link.link}
+             end={link.link === "/admin"} 
+            className={({ isActive }) =>
+              `flex items-center gap-2 p-2 rounded-md transition ${
+                isActive ? "bg-blue-100 text-black" : "hover:bg-gray-100"
+              }`
+            }
+          >
+            {link.icon}
+            <span className="text-sm font-normal">{link.title}</span>
+          </NavLink>
+    ))}
+</div>
+
+<div className =" p-2 bg-blue-100 text-center rounded-xl">
+    <p className="text-lg ">Term 1</p>
+    <p className="text-blue-300">2023 -2025</p>
+    </div>
         </div>
     )
 }

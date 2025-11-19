@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Navbar from '../components/navbar';
 import Sidebar from '../components/sidebar';
-import DynamicTable from '../components/table';
+
 import { BsDashSquare ,BsCompass ,BsPeople ,BsHouse ,BsCalendar, BsPerson} from 'react-icons/bs';
 function DashboardLayout(){
   const link = [

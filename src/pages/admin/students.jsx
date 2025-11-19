@@ -1,117 +1,131 @@
-import DynamicTable from "../../components/table";
-import { useState } from "react";
-import ModalForm from "../../components/form";
-import Circle from "../../components/circle";
-import Page from "../../components/page";
-function Students() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedRow, setSelectedRow] = useState(null);
-  const [modalType, setModalType] = useState("");
-  const [isiOpen, setOpen] =useState(true);
+import React, { useState } from "react";
+import DynamicTable from '../../components/table';
+import Modal from "../../components/form";
 
-  // ✅ Add your table data here
-  const data = [
-    { ID: 1, Name: "Alice", Class: "A1" },
-    { ID: 2, Name: "Bob", Class: "B2" },
-    { ID: 3, Name: "Charlie", Class: "C1" },
+function Students() {
+  const [data, setData] = useState([
+    { name: "John Doe", email: "john@example.com", role: "Admin" },
+    { name: "Jane Smith", email: "jane@example.com", role: "Teacher" },
+  ]);
+
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [modalType, setModalType] = useState(""); // "view", "update", "add"
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fields = [
+    { name: "name", label: "Name" },
+    { name: "email", label: "Email" },
+    { name: "role", label: "Role" },
   ];
 
-  // ✅ Table column headers
-  const columns = ["ID", "Name", "Class"];
-
-  // ✅ Handle action (view/update/delete)
-  const handleAction = (type, row) => {
-    setModalType(type);
-    setSelectedRow(row);
-    setIsModalOpen(true);
+  // Handle table actions
+  const handleAction = (action, row) => {
+    if (action === "view" || action === "update") {
+      setSelectedRow(row);
+      setModalType(action);
+      setIsModalOpen(true);
+    } else if (action === "delete") {
+      const confirmed = window.confirm(`Delete ${row.name}?`);
+      if (confirmed) {
+        setData(prev => prev.filter(r => r !== row));
+      }
+    }
   };
 
-  // ✅ Handle form submission
-  const handleSubmit = (formData) => {
-    console.log("Form submitted:", formData);
+  // Handle Add / Update form submission
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const student = {
+      name: form.name.value,
+      email: form.email.value,
+      role: form.role.value,
+    };
+
+    if (modalType === "add") {
+      // Add new student
+      setData(prev => [...prev, student]);
+    } else if (modalType === "update") {
+      // Update existing student
+      setData(prev => prev.map(r => (r === selectedRow ? student : r)));
+    }
+
     setIsModalOpen(false);
-  };
-
-  // ✅ Define dynamic form fields based on modalType
-  const formFields = {
-    update: [
-      {
-        label: "Name",
-        name: "Name",
-        type: "text",
-        defaultValue: selectedRow?.Name || "",
-      },
-      {
-        label: "Class",
-        name: "Class",
-        type: "text",
-        defaultValue: selectedRow?.Class || "",
-      },
-    ],
-    record: [
-      {
-        label: "Score",
-        name: "score",
-        type: "number",
-        placeholder: "Enter score",
-      },
-    ],
+    setSelectedRow(null);
   };
 
   return (
-    <div className="w-full flex flex-col gap-3">
-      {/* Header */}
-      <div className="flex flex-col">
-        <h1>Welcome to Academic</h1>
-        <div className="flex gap-3">
-          <Circle number={1000} user={"Admin"} />
-          <Circle number={49} user={"BUrsar"} />
-          <Circle number={49} user={"Dod"} />
-          <Circle number={49} user={"Matron"} />
-          <Circle number={49} user={"Patron"} />
-          <Circle number={90} user={"Store-keeper"} isLast={true}/>
-        </div>
-      </div>
+    <div className="p-4">
+      <h1 className="text-xl font-bold mb-4">Students</h1>
 
-      {/* Table Section */}
-      <div className="flex flex-col gap-3">
-        <div className="flex justify-between items-center">
-          <h1 className="text-xl font-semibold">Students Table</h1>
-          <button
-            className="bg-blue-400 w-40 p-2 font-semibold rounded-[3px] hover:bg-blue-200"
-            onClick={() => {
-              setModalType("add");
-              setIsModalOpen(true);
-            }}
-          >
-            + Add Student 
-          </button>
-        </div>
+      {/* Add Student Button */}
+      <button
+        className="bg-blue-500 text-white p-2 rounded mb-4"
+        onClick={() => {
+          setModalType("add");
+          setSelectedRow(null);
+          setIsModalOpen(true);
+        }}
+      >
+        + Add Student
+      </button>
 
-        {/* Table Component */}
-        <DynamicTable
-          columns={columns}
-          data={data}
-          actions={["view", "update", "delete"]}
-          onAction={handleAction}
-        />
+      {/* Table */}
+      <DynamicTable
+        fields={fields}
+        data={data}
+        actions={["view", "update", "delete"]}
+        onAction={handleAction}
+      />
 
-        {/* Modal Form */}
-        <ModalForm
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          title={`${modalType} Student`}
-          fields={formFields[modalType] || []}
-          onSubmit={handleSubmit}
-        />
-        <Page  isOpen ={isiOpen}/>
-      </div>
+      {/* Modal */}
+      <Modal
+        open={isModalOpen}
+        title={
+          modalType === "add"
+            ? "Add Student"
+            : modalType === "update"
+            ? "Update Student"
+            : "View Student"
+        }
+        onClose={() => setIsModalOpen(false)}
+      >
+        {modalType === "view" && selectedRow && (
+          <div>
+            <p><strong>Name:</strong> {selectedRow.name}</p>
+            <p><strong>Email:</strong> {selectedRow.email}</p>
+            <p><strong>Role:</strong> {selectedRow.role}</p>
+          </div>
+        )}
+
+        {(modalType === "add" || modalType === "update") && (
+          <form onSubmit={handleFormSubmit} className="flex flex-col gap-2">
+            <input
+              name="name"
+              defaultValue={selectedRow?.name || ""}
+              placeholder="Name"
+              className="border p-1"
+            />
+            <input
+              name="email"
+              defaultValue={selectedRow?.email || ""}
+              placeholder="Email"
+              className="border p-1"
+            />
+            <input
+              name="role"
+              defaultValue={selectedRow?.role || ""}
+              placeholder="Role"
+              className="border p-1"
+            />
+            <button type="submit" className="bg-green-500 text-white p-1 rounded">
+              {modalType === "add" ? "Add Student" : "Save Changes"}
+            </button>
+          </form>
+        )}
+      </Modal>
     </div>
   );
 }
 
 export default Students;
-
-
-
-

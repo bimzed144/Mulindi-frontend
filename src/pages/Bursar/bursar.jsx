@@ -11,7 +11,7 @@ function Bursar() {
             <Routes>
                 <Route path="/bursar" element={
                     <div className="p-6">
-                        <h1 className="text-2xl font-bold text-gray-800 mb-6">Bursar Dashboard</h1>
+                        <h1 className="text-2xl font-bold text-gray-800 mb-6 hello">Bursar Dashboard</h1>
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                                 <h3 className="text-lg font-semibold text-gray-800 mb-2">Total Fees</h3>

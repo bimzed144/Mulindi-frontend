@@ -1,5 +1,4 @@
-import DynamicTable from "../../components/table";
-import ModalForm from "../../components/form";
+
 import { BsPerson } from "react-icons/bs";
 import User from "../../components/user";
 
@@ -10,7 +9,7 @@ function Users() {
     <div className="w-full flex flex-col gap-3">
       {/* Header */}
       <div className="flex w-full justify-between">
-        <h1>Welcome to Users page</h1>
+        <h1 className="hello">Welcome to Users page</h1>
       </div>
 
       {/* Table Section */}

@@ -1,58 +1,47 @@
+// components/DynamicTable.jsx
+import React from "react";
 
-
-function DynamicTable({ columns, data, actions = [], onAction }) {
+function DynamicTable({ fields, data, actions = [], onAction }) {
   return (
-    <table className="w-full overflow-hidden rounded-[5px] border border-gray-200">
-      <thead className="bg-blue-200 rounded-2xl">
+    <table className="w-full border border-gray-300 rounded">
+      <thead className="bg-gray-200">
         <tr>
-          {columns.map((col) => (
-            <th key={col} className="p-2 text-black/80 text-left">
-              {col}
-            </th>
+          {fields.map((f) => (
+            <th key={f.name} className="p-2 text-left">{f.label}</th>
           ))}
-          {actions.length > 0 && <th className="p-2 text-left">Actions</th>}
+          {actions.length > 0 && <th className="p-2">Actions</th>}
         </tr>
       </thead>
       <tbody>
-        {data.map((row, i) => (
-          <tr key={i} className="border-b border-[#D1D9E0]  hover:bg-gray-100">
-            {columns.map((col) => (
-              <td key={col} className="border-b border-[#D1D9E0]  text-sm p-2">
-                {row[col]}
-              </td>
+        {data.map((row, idx) => (
+          <tr key={idx} className="border-t hover:bg-gray-100">
+            {fields.map((f) => (
+              <td key={f.name} className="p-2">{row[f.name]}</td>
             ))}
             {actions.length > 0 && (
-              <td className=" p-2 flex gap-2">
+              <td className="p-2 flex gap-2">
                 {actions.includes("view") && (
                   <button
-                    onClick={() => onAction("view", row) }
-                    className="text-blue-500 hover:underline"
+                    className="text-blue-600"
+                    onClick={() => onAction("view", row)}
                   >
                     View
                   </button>
                 )}
                 {actions.includes("update") && (
                   <button
+                    className="text-green-600"
                     onClick={() => onAction("update", row)}
-                    className="text-green-600 hover:underline"
                   >
                     Update
                   </button>
                 )}
                 {actions.includes("delete") && (
                   <button
+                    className="text-red-600"
                     onClick={() => onAction("delete", row)}
-                    className="text-red-600 hover:underline"
                   >
                     Delete
-                  </button>
-                )}
-                {actions.includes("record") && (
-                  <button
-                    onClick={() => onAction("record", row)}
-                    className="text-purple-600 hover:underline"
-                  >
-                    Record
                   </button>
                 )}
               </td>

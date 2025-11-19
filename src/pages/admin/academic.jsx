@@ -23,35 +23,51 @@ const AcademicYear = () => {
   };
 
   const addTerm = (yearId) => {
-    setAcademicYears(academicYears.map(year => {
-      if (year.id === yearId) {
-        if (year.terms.length >= 3) {
-          alert('Maximum 3 terms allowed per academic year');
-          return year;
+    setAcademicYears(
+      academicYears.map(year => {
+        if (year.id === yearId) {
+          if (year.terms.length >= 3) {
+            alert('Maximum 3 terms allowed per academic year');
+            return year;
+          }
+          const termNumber = year.terms.length + 1;
+          return {
+            ...year,
+            terms: [
+              ...year.terms,
+              {
+                id: Date.now(),
+                name: `Term ${termNumber}`,
+                year: year.year,
+                closed: false
+              }
+            ]
+          };
         }
-        const termNumber = year.terms.length + 1;
-        return {
-          ...year,
-          terms: [
-            ...year.terms,
-            { 
-              id: Date.now(),
-              name: `Term ${termNumber}`,
-              year: year.year,
-              closed: false
-            }
-          ]
-        };
-      }
-      return year;
-    }));
+        return year;
+      })
+    );
   };
 
+  // ✔ FIXED LOGIC → Set term as current
   const setAsCurrentTerm = (termId) => {
-    setCurrentTerm(termId);
+    setAcademicYears(
+      academicYears.map(year => ({
+        ...year,
+        terms: year.terms.map(term => {
+          if (term.id === termId) {
+            return { ...term, closed: false }; // remove closed status
+          }
+          return term;
+        })
+      }))
+    );
+
+    setCurrentTerm(termId); 
     setOpenMenu(null);
   };
 
+  // ✔ FIXED LOGIC → Close term
   const closeTerm = (termId) => {
     setAcademicYears(
       academicYears.map(year => ({
@@ -61,6 +77,12 @@ const AcademicYear = () => {
         )
       }))
     );
+
+    // If the closed term was current, remove it
+    if (currentTerm === termId) {
+      setCurrentTerm(null);
+    }
+
     setOpenMenu(null);
   };
 
@@ -88,8 +110,8 @@ const AcademicYear = () => {
                   onClick={() => addTerm(year.id)}
                   disabled={year.terms.length >= 3}
                   className={`px-4 py-2 border-2 rounded flex items-center gap-2 ${
-                    year.terms.length >= 3 
-                      ? 'opacity-50 cursor-not-allowed' 
+                    year.terms.length >= 3
+                      ? 'opacity-50 cursor-not-allowed'
                       : 'hover:bg-gray-100 bg-blue-200'
                   }`}
                 >
@@ -112,7 +134,8 @@ const AcademicYear = () => {
 
                     <span className="text-blue-600 text-sm">{term.year}</span>
 
-                    {currentTerm === term.id && (
+                    {/* Status labels */}
+                    {currentTerm === term.id && !term.closed && (
                       <span className="text-green-600 text-xs mt-1">(current)</span>
                     )}
 
@@ -120,7 +143,7 @@ const AcademicYear = () => {
                       <span className="text-red-600 text-xs mt-1">(closed)</span>
                     )}
 
-                    {/* 3 DOTS BUTTON */}
+                    {/* 3 dots button */}
                     <button
                       className="absolute top-2 right-2"
                       onClick={(e) => {
@@ -131,7 +154,7 @@ const AcademicYear = () => {
                       <BsThreeDotsVertical className="text-gray-700 text-xl" />
                     </button>
 
-                    {/* DROPDOWN MENU */}
+                    {/* Dropdown Menu */}
                     {openMenu === term.id && (
                       <div className="absolute top-10 right-2 bg-white shadow-lg rounded w-40 py-2 z-50">
                         <button
@@ -152,6 +175,7 @@ const AcademicYear = () => {
                   </div>
                 ))}
 
+                {/* Empty slots */}
                 {[...Array(Math.max(0, 3 - year.terms.length))].map((_, idx) => (
                   <div key={idx} className="bg-gray-200 rounded-lg p-6 h-32" />
                 ))}

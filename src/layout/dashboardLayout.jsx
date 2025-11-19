@@ -2,13 +2,18 @@ import { Outlet } from "react-router-dom";
 import Navbar from '../components/navbar';
 import Sidebar from '../components/sidebar';
 import DynamicTable from '../components/table';
-import { BsDashSquare ,BsCompass ,BsPeople ,BsHouse ,BsCalendar, BsPerson} from 'react-icons/bs';
+import { BsDashSquare ,BsCompass ,BsPeople ,BsHouse ,BsCalendar, BsPerson, BsInfoCircle } from 'react-icons/bs';
 function DashboardLayout(){
   const link = [
     {
       icon : <BsCompass className='icon'/>,
       link : "/admin",
       title : "Dashboard",
+    },
+    {
+      icon: <BsInfoCircle />,
+      link: "about",
+      title: "About",
     },
     {
       icon : <BsPeople />,

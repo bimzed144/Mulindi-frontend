@@ -25,7 +25,7 @@ function Sidebar({links}){
 
 <div className =" p-2 bg-blue-100 text-center rounded-xl">
     <p className="text-lg ">Term 1</p>
-    <p className="text-blue-300">2023 -2025</p>
+    <p className="text-blue-600">2023 -2025</p>
     </div>
         </div>
     )

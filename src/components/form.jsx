@@ -8,7 +8,7 @@ function Modal({ open, title, onClose, children }) {
       <div className="bg-white p-4 rounded w-96">
         <div className="flex justify-between mb-2">
           <h2 className="font-bold">{title}</h2>
-          <button onClick={onClose}>X</button>
+          <button onClick={onClose} className="text-3xl">&times;</button>
         </div>
         <div>{children}</div>
       </div>
